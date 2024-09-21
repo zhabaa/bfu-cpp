@@ -33,4 +33,5 @@ int main(){
     int i_bytes = (x >> i) & 1;
 
     cout << "Value of i-th bit of number x: " << i_bytes << endl;
+    return 1;
 }
