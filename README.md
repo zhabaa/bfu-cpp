@@ -7,3 +7,4 @@ ______________
  - [x] Arithmetic operations
  - [x] Bit operations
  - [x] Conditional statements
+ - [x] Cycles
