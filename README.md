@@ -6,3 +6,4 @@ ______________
  - [x] Variables and data types
  - [x] Arithmetic operations
  - [x] Bit operations
+ - [x] Conditional statements
