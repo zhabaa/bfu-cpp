@@ -5,4 +5,4 @@ ______________
 ## Laboratory work
  - [x] Variables and data types
  - [x] Arithmetic operations
- - [ ] ...
+ - [x] Bit operations
