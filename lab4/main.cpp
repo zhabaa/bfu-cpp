@@ -28,7 +28,7 @@ int second() {
     cout << "Enter n value:" << endl;
     cin >> n;
 
-    if (! (0 <= n <= 9)) {
+    if (! (n >= 0 || n <= 9)) {
         cout << "Это не цифра!" << endl;
         return 1;
     }
