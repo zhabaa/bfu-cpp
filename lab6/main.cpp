@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
-#include <limits.h>
+#include <limits>
 #include <unordered_set>
 
 using namespace std;
@@ -184,7 +184,7 @@ int third() {
     printMatrix(matrix);
     cout << endl;
 
-    int minElement = INT_MAX;
+    int minElement = numeric_limits<int>::max();
     int minColumn = -1;
     
     for (int j = 0; j < m; ++j) {
