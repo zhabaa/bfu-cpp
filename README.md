@@ -8,3 +8,6 @@ ______________
  - [x] Bit operations
  - [x] Conditional statements
  - [x] Cycles
+ - [x] Arrays
+ - [x] Functions
+ - [ ] Strings  
