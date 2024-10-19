@@ -186,38 +186,6 @@ int third() {
     return 0;
 }
 
-// int fourth() {
-//     int n;
-
-//     cout << "Введите количество элементов <= 10000: ";
-//     cin >> n;
-
-//     int arr[20'000];
-
-//     cout << "Введите последовательность натуральных чисел:\n";
-//     for (int i = 0; i < n; i++) {
-//         cin >> arr[i];
-//     }
-
-//     int index = 0;
-
-//     for (int i = 0; i < n; i++) {
-//         if (!hasDuplicates(arr[i])) {
-//             arr[index++] = arr[i];
-//             if (hasFive(arr[i])) {
-//                 arr[index++] = arr[i];
-//             }
-//         }
-//     }
-
-//     cout << "Полученная последовательность (каждый элемент по одному разу):\n";
-//     for (int i = 0; i < index; i++) {
-//         cout << arr[i] << " ";
-//     }
-
-//     return 0;
-// }
-
 int fourth() {
     int n;
     int arr[MAX_N];
