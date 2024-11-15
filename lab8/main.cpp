@@ -5,9 +5,11 @@
 #include <set>
 #include <cctype>
 #include <algorithm>
-#include <ranges>
+// #include <ranges>
 
 using namespace std;
+
+const int ALPHABET_SIZE = 26;
 
 string cleanWord(const string &word) {
     string result;
@@ -32,7 +34,7 @@ vector<string> readFile(const string &input_path) {
 
     string word;
 
-    while (input_file >> word) { // Читаем по словам, разделяя по пробелам
+    while (input_file >> word) {
         string cleanedWord = cleanWord(word);
         if (!cleanedWord.empty()) {
             words.push_back(cleanedWord);
@@ -59,19 +61,22 @@ void writeFile(const string &output_path, const vector<string> &result_words) {
     cout << "File writed successfully!" << endl;
 }
 
-bool isSimilarWord(const string& mainWord, const string& testWord) {
-    const int ALPHABET_SIZE = 26;
+vector<int> countLetters(const string &word) {
+    vector<int> letterCount(ALPHABET_SIZE, 0);
 
+    for (char chr : word) {
+        letterCount[chr - 'a']++;
+    }
+
+    return letterCount;
+}
+
+bool isSimilarWord(const string& mainWord, const string& testWord) {
     vector<int> mainCount(ALPHABET_SIZE, 0);
     vector<int> testCount(ALPHABET_SIZE, 0);
 
-    for (char c : mainWord) {
-        mainCount[c - 'a']++;
-    }
-
-    for (char c : testWord) {
-        testCount[c - 'a']++;
-    }
+    mainCount = countLetters(mainWord);
+    testCount = countLetters(testWord);
 
     bool extraFound = false;
 
@@ -91,10 +96,6 @@ bool compareLenght(const string &a, const string &b) {
     return a.size() > b.size();
 }
 
-// bool comparator(char a, char b) {
-//     return strcmp(a, b);
-// }
-
 bool isVowel(char c) {
     c = tolower(c);
     return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u');
@@ -108,6 +109,46 @@ int countVowels(string &word) {
         }
     }
     return count;
+}
+
+vector<char> countMostCommonLetters(const vector<string> &words) {
+    vector<int> mostCommonLettersIdx(26, 0);
+
+    for (const string &word : words) {
+        vector<int> letterCount = countLetters(word);
+
+        for (int i = 0; i < ALPHABET_SIZE; ++i) {
+            mostCommonLettersIdx[i] += letterCount[i];
+        }
+    }
+
+    vector<char> mostCommonLetters;
+
+    while (mostCommonLetters.size() < 10) {
+        int indexMaxEl = distance(mostCommonLettersIdx.begin(), max_element(mostCommonLettersIdx.begin(), mostCommonLettersIdx.end()));
+        mostCommonLetters.push_back('a' + indexMaxEl);
+        mostCommonLettersIdx[indexMaxEl] = 0;
+    }
+
+    return mostCommonLetters;
+}
+
+bool checkLetter(const vector<char> &MCLetters, const string &word) {
+    vector<char> chars;
+
+    for (char c : word) {
+        if (find(MCLetters.begin(), MCLetters.end(), tolower(c)) != MCLetters.end()) {
+            chars.push_back(c);
+        }
+    }
+
+    set<char> set_chars(chars.begin(), chars.end());
+
+    if (set_chars.size() > 1) {
+        return false;
+    }
+
+    return true;
 }
 
 int first() {
@@ -167,10 +208,6 @@ int second() {
         }
     }
 
-    // set<string> set_first(words_3vowels.begin(), words_3vowels.end());
-    // set<string> set_second(other_words.begin(), other_words.end());
-
-
     cout << "Words of text containing 3 vowels" << endl;
 
     for (string word : words_3vowels) {
@@ -184,10 +221,78 @@ int second() {
     }
 
     return 0;
+}
 
+int third() {
+    string input_path = "D:\\bfu-cpp\\lab8\\files\\input1.txt";
+    string output_path = "D:\\bfu-cpp\\lab8\\files\\output.txt";
+
+    vector<string> words = readFile(input_path);
+
+    vector<char> mostCommonLetters = countMostCommonLetters(words);
+
+    for (char c : mostCommonLetters) {
+        cout << c << " ";
+    }
+    cout << endl;
+
+    ifstream input_file(input_path);
+    ofstream output(output_path);
+
+    if (!input_file.is_open()) {
+        cout << "[!] Cannot open file for reading" << endl;
+        return 1;
+    }
+    
+    if (!output.is_open()) {
+        cout << "[!] Cannot open file for writing" << endl;
+        return 1;
+    }
+    
+    string word;
+
+    while (input_file >> word) {
+        bool flag = false;
+        char foundLetter;
+        string temp_word;
+
+        int countMCL = 0;
+
+        // for (const char c : word) {
+        //     bool condition = find(mostCommonLetters.begin(), mostCommonLetters.end(), tolower(c)) != mostCommonLetters.end();
+
+        //     if (condition) {
+        //         flag = !flag;
+        //     }
+
+            // if (condition && flag && foundLetter != tolower(c)) { // проверка единственная ли буква
+            //     flag = false;
+            // }
+        // }
+
+        cout << word << " " << checkLetter(mostCommonLetters, word) << endl;
+
+        // for (char elem : checkLetter(mostCommonLetters, word)) {
+        //     cout << elem << " ";
+        // }
+
+        // cout << endl;
+        
+        // if (flag) {
+        //     output << temp_word << " (" << foundLetter << ") " << "\n";
+        // } else {
+        //     output << word << " ";
+        // }
+
+    }
+
+    input_file.close();
+    output.close();
+
+    return 0;
 }
 
 int main() {
-    second();
+    third();
     return 0;
 }
