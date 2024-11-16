@@ -151,6 +151,25 @@ bool checkLetter(const vector<char> &MCLetters, const string &word) {
     return true;
 }
 
+set<char> checkChar(const vector<char> &MCLetters, const string &word) {
+    vector<char> chars;
+
+    for (char c : word) {
+        if (find(MCLetters.begin(), MCLetters.end(), tolower(c)) != MCLetters.end()) {
+            chars.push_back(c);
+        }
+    }
+
+    set<char> set_chars(chars.begin(), chars.end());
+
+    if (set_chars.size() > 1 || set_chars.size() == 0) {
+        return set<char>();
+    }
+
+    return set_chars;
+}
+
+
 int first() {
     string input_path = "D:\\bfu-cpp\\lab8\\files\\input.txt";
     string output_path = "D:\\bfu-cpp\\lab8\\files\\output.txt";
@@ -224,7 +243,7 @@ int second() {
 }
 
 int third() {
-    string input_path = "D:\\bfu-cpp\\lab8\\files\\input1.txt";
+    string input_path = "D:\\bfu-cpp\\lab8\\files\\input.txt";
     string output_path = "D:\\bfu-cpp\\lab8\\files\\output.txt";
 
     vector<string> words = readFile(input_path);
@@ -253,37 +272,26 @@ int third() {
 
     while (input_file >> word) {
         bool flag = false;
-        char foundLetter;
         string temp_word;
 
         int countMCL = 0;
 
-        // for (const char c : word) {
-        //     bool condition = find(mostCommonLetters.begin(), mostCommonLetters.end(), tolower(c)) != mostCommonLetters.end();
+        bool condition = checkLetter(mostCommonLetters, word);
 
-        //     if (condition) {
-        //         flag = !flag;
-        //     }
+        if (condition) {
 
-            // if (condition && flag && foundLetter != tolower(c)) { // проверка единственная ли буква
-            //     flag = false;
-            // }
-        // }
+            for (char chr : word) {
+                temp_word += toupper(chr);
+            }
 
-        cout << word << " " << checkLetter(mostCommonLetters, word) << endl;
+            set<char> foundLetter = checkChar(mostCommonLetters, word);
+            vector<char> foundLetterVector(foundLetter.begin(), foundLetter.end());
 
-        // for (char elem : checkLetter(mostCommonLetters, word)) {
-        //     cout << elem << " ";
-        // }
-
-        // cout << endl;
-        
-        // if (flag) {
-        //     output << temp_word << " (" << foundLetter << ") " << "\n";
-        // } else {
-        //     output << word << " ";
-        // }
-
+            output << temp_word << " (" << foundLetterVector[0] << ") ";
+    
+        } else {
+            output << word << " ";
+        }
     }
 
     input_file.close();
