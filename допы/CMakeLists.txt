@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDART 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDART_REQUIRED True)
 
-add_executable(${PROJECT_NAME} 1.cpp)
+add_executable(${PROJECT_NAME} 2.cpp)
