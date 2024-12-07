@@ -1,1 +1,1 @@
-void bubble(int *mas, int n);
+void bubbleSort(int arr[], int n);
