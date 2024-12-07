@@ -1,57 +1,57 @@
-#include <stdio.h>
+#include "func.hpp"
 #include <stdlib.h>
-// Функция сортировки двухпутевым слиянием
-void merge(int *a, int n)
-{
-    int mid = n / 2; // находим середину сортируемой последовательности
-    if (n % 2 == 1)
-        mid++;
-    int h = 1; // шаг
-    // выделяем память под формируемую последовательность
-    int *c = (int *)malloc(n * sizeof(int));
-    int step;
-    while (h < n)
-    {
-        step = h;
-        int i = 0;   // индекс первого пути
-        int j = mid; // индекс второго пути
-        int k = 0;   // индекс элемента в результирующей последовательности
-        while (step <= mid)
-        {
-            while ((i < step) && (j < n) && (j < (mid + step)))
-            { // пока не дошли до конца пути
-                // заполняем следующий элемент формируемой последовательности
-                // меньшим из двух просматриваемых
-                if (a[i] < a[j])
-                {
-                    c[k] = a[i];
-                    i++;
-                    k++;
-                }
-                else
-                {
-                    c[k] = a[j];
-                    j++;
-                    k++;
-                }
-            }
-            while (i < step)
-            { // переписываем оставшиеся элементы первого пути (если второй кончился раньше)
-                c[k] = a[i];
-                i++;
-                k++;
-            }
-            while ((j < (mid + step)) && (j < n))
-            { // переписываем оставшиеся элементы второго пути (если первый кончился раньше)
-                c[k] = a[j];
-                j++;
-                k++;
-            }
-            step = step + h; // переходим к следующему этапу
+
+void merge(int arr[], int l, int m, int r) {
+    int i, j, k;
+
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    int L[n1], R[n2];
+
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    i = 0;
+    j = 0;
+    k = l;
+
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
         }
-        h = h * 2;
-        // Переносим упорядоченную последовательность (промежуточный вариант) в исходный массив
-        for (i = 0; i < n; i++)
-            a[i] = c[i];
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int l, int r)
+{
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+
+        merge(arr, l, m, r);
     }
 }

@@ -17,15 +17,13 @@ int main()
 
     in >> n;
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         in >> mas[i];
     }
 
-    bubbleSort(mas, n);
+    countSort(mas, n); 
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         out << mas[i] << " ";
     }
 
@@ -34,4 +32,10 @@ int main()
 
 // shell
 // bubble
-//
+// heap
+// quick
+// count
+
+//merge
+//swap
+

@@ -1,1 +1,1 @@
-void bubbleSort(int arr[], int n);
+void countSort(int array[], int size);
