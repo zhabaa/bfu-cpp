@@ -1,27 +1,29 @@
-void quickSort(int *array, int low, int high)
-{
-    int i = low;
-    int j = high;
-    int pivot = array[(i + j) / 2];
-    int temp;
+#include <stdio.h>
 
-    while (i <= j)
-    {
-        while (array[i] < pivot)
+void swap(int *a, int *b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
             i++;
-        while (array[j] > pivot)
-            j--;
-        if (i <= j)
-        {
-            temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-            i++;
-            j--;
+            swap(&arr[i], &arr[j]);
         }
     }
-    if (j > low)
-        quickSort(array, low, j);
-    if (i < high)
-        quickSort(array, i, high);
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
 }
