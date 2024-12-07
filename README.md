@@ -1,13 +1,22 @@
-# Repo for c++ labs
 <img src='https://i.pinimg.com/736x/8b/1b/90/8b1b90c4fdcc2f166651607b4d3344b8.jpg' height=300 wigth=300>
 
-______________
-## Laboratory works
- - [x] Variables and data types
- - [x] Arithmetic operations
- - [x] Bit operations
- - [x] Conditional statements
- - [x] Cycles
- - [x] Arrays
- - [x] Functions
- - [ ] Strings  
+___
+## Лабораторные
+ - [x] Типы Данных
+ - [x] Арифметические операции
+ - [x] Битовые операции
+ - [x] Условные операторы
+ - [x] Циклы
+ - [x] Массивы
+ - [x] Функции
+ - [x] Строки
+ - [x] Интерпретация целых чисел
+ - [x] Односвязный список
+
+___
+## Дополнительные задания
+- [x] Грузоперевозки
+- [x] Счастливые билетики
+- [x] Удаление и дублирование
+- [ ] Сортировки
+- [x] Площадь двух кругов
