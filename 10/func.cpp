@@ -34,7 +34,7 @@ int CountDigits(int x) {
 }
 
 int getFirstDigit(int x) {
-    while (x % 10 > 0) {
+    while (x / 10 > 0) {
         x /= 10;
     }
     return x;
@@ -43,7 +43,7 @@ int getFirstDigit(int x) {
 namespace linkedList {
 
     void make(Node *&head) {
-        head = new Node{0, nullptr};
+        head = new Node {0, nullptr};
     }
 
     void pushback(Node *head, int value) {
@@ -71,6 +71,19 @@ namespace linkedList {
         std::cout << std::endl;
     }
 
+    int size(Node *head) {
+        Node *curr = head;
+
+        int count = 0;
+
+        while (curr -> next != nullptr) {
+            curr = curr -> next;
+            count++;
+        }
+
+        return count;
+    }
+
     void pop(Node *head, int index) {
         /* delete by index */
 
@@ -91,27 +104,6 @@ namespace linkedList {
 
         delete temp;
     }
-
-    /* didnt
-    void remove(Node *head, int value) {
-         delete by value 
-
-        Node *curr = head;
-
-        while (curr != nullptr && curr -> next -> data != value) {
-            curr = curr -> next;
-        }
-
-        if (curr == nullptr) {
-            return;
-        }
-
-        Node *tmp = curr -> next;
-        curr -> next = curr -> next -> next;
-
-        delete tmp;
-    }
-*/
 
     void clear(Node *head) {
         Node *curr = head;
@@ -147,27 +139,6 @@ namespace linkedList {
         }
     }
 
-    /* didnt 
-    void copy(Node *head, int value) {
-         copy element by value 
-
-        Node *curr = head;
-
-        while (curr -> next != nullptr && curr -> data != value) {
-            curr = curr -> next;
-        }
-
-        if (curr == nullptr) {
-            return;
-        }
-
-        Node *newNode = new Node;
-        newNode -> data = value;
-        newNode -> next = curr -> next;
-        curr -> next = newNode;
-    }
-*/
-
     Node *get(Node *head, int index) {
         /* get element index */
 
@@ -188,36 +159,28 @@ namespace linkedList {
         }
     }
 
-    Node *Check(Node *newNode, Node *sorted) {
-        if (sorted == nullptr || getFirstDigit(sorted -> data) >= getFirstDigit(newNode -> data)) {
-            newNode -> next = sorted;
-            sorted = newNode;
-
-        } else {
-            Node *curr = sorted;
-
-            while (curr->next != nullptr && getFirstDigit(curr -> next -> data) < getFirstDigit(newNode -> data)) {
-                curr = curr -> next;
-            }
-
-            newNode->next = curr->next;
-            curr->next = newNode;
-        }
-
-        return sorted;
-    }
-
-    Node *sort(Node *head) {
-        Node *sorted = nullptr;
+    void sortLinkedList(Node *head) {
         Node *curr = head;
+        Node *temp = nullptr;
+
+        int t;
+
+        if (head == nullptr) {
+            return;
+        }
 
         while (curr != nullptr) {
-            Node *next = curr -> next;
-            sorted = Check(curr, sorted);
-            curr = next;
+            temp = curr -> next;
+
+            while (temp != nullptr) {
+                if (getFirstDigit(curr -> data) > getFirstDigit(temp -> data)) {
+                    t = curr -> data;
+                    curr -> data = temp -> data;
+                    temp -> data = t;
+                }
+                temp = temp -> next;
+            }
+            curr = curr -> next;
         }
-
-        return sorted;
-
     }
 }

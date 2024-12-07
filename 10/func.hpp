@@ -10,17 +10,18 @@ namespace linkedList {
 
     void print(Node* head);
 
+    int size(Node *head);
+
     void pop(Node *head, int index);
 
     void clear(Node *head);
 
     void indexCopy(Node *head, int index);
 
+    void sortLinkedList(Node *head);
+
     Node *get(Node *head, int index);
 
-    Node *Check(Node *newnode, Node *sorted);
-
-    Node *sort(Node *head);
 
     // void copy(Node *head, int x);
     // void Change(Node *head, int n);

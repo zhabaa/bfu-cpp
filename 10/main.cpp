@@ -29,22 +29,19 @@ int main() {
     linkedList::print(head);
 
     if (hadGoodDigits) {
-        // Отсортировать если есть трехзначные числа, состоящие только из четных цифр
-        linkedList::sort(head);
-
-        std::cout << "1";
-
+        linkedList::sortLinkedList(head);
 
     } else {
-        // Удалить все числа с четным кол-вом цифр
-        // Продублировать оставшиеся
-
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++) {
             if (!(CountDigits(linkedList::get(head, i) -> data) % 2)) {
                 linkedList::pop(head, i);
-            } else {
-                linkedList::indexCopy(head, i);
+                n--;
             }
+        }
+
+        for (int i = 0; i < n; i += 2) {
+            linkedList::indexCopy(head, i);
+            n++;
         }
     }
 
@@ -52,6 +49,5 @@ int main() {
     linkedList::print(head);
 
     linkedList::clear(head);
-
     return 0;
 }
