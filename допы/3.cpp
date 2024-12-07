@@ -1,12 +1,6 @@
-// TODO шляпа делает не то когда в начале чтоит число начинающееся с единицы
-
-
 #include <iostream>
 
 using namespace std;
-
-const int MAX_SIZE = 10000;
-
 
 int sumOfDigits(int number) {
     int sum = 0;
@@ -17,40 +11,67 @@ int sumOfDigits(int number) {
     return sum;
 }
 
-
-int main() {
-    int arr[MAX_SIZE], n;
-
-    cout << "Enter volume <= 10000: ";
-    cin >> n;
-
-    cout << "Enter sequence:" << endl;
-    for (int i = 0; i < n; ++i) {
-        cin >> arr[i];
+int isFirstOne(int number) {
+    while (number / 10 > 0) {
+        number /= 10;
     }
 
-    int newSize = 0;
+    return number == 1;
+}
 
-    for (int i = 0; i < n; ++i) {
-        if (sumOfDigits(arr[i]) % 6 != 0) {
-            arr[newSize] = arr[i];
-            newSize++;
+void del(int *mas, int& n) {
+    int j = 0;
 
-            if (arr[i] / 10 == 1) {
-                arr[newSize] = arr[i];
-                newSize++;
+    for (int i = 0; i < n; i++) {
+        if (!(sumOfDigits(mas[i]) % 6)) {
+            continue;
+        }
+        mas[j] = mas[i];
+        j++;
+    }
+    n = j;
+}
+
+void dubl(int *mas, int& n) {
+    for (int i = 0; i < n; i++) {
+        if (isFirstOne(mas[i]) && mas[i] != 1) {
+            for (int j = n; j > i; j--) {
+                mas[j] = mas[j - 1];
             }
+            i++;
+            n++;
         }
     }
+}
 
-    n = newSize;
+void print(int *mas, int& n) {
+    for (int i = 0; i < n; ++ i) {
+        cout << mas[i] << " ";
+    }    
+    cout << endl;
+}
 
-    cout << "Result:" << endl;
+int main() {
+    const int N_MAX = 20'000;
+
+    int n;
+    cout << "Enter lenght: ";
+    cin >> n;
+
+    int mas[N_MAX];
+
+    cout << "Enter sequence:" << endl;
 
     for (int i = 0; i < n; ++i) {
-        cout << arr[i] << " ";
+        cin >> mas[i];
     }
-    cout << endl;
 
+    del(mas, n);
+    dubl(mas, n);
+
+    cout << "result: ";
+
+    print(mas, n);
+    
     return 0;
 }

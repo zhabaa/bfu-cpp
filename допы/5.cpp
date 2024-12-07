@@ -4,19 +4,20 @@
 using namespace std;
 
 int main() {
-    cout << "Enter r1, x1, y1: ";
     int r1, x1, y1;
-    cin >> r1 >> x1 >> y1;
-
-    cout << "Enter r2, x2, y2: ";
     int r2, x2, y2;
-    cin >> r2 >> x2 >> y2;
-
-    double d = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 
     double s, s1, s2;
 
+    cout << "Enter r1, x1, y1: ";
+    cin >> r1 >> x1 >> y1;
+
+    cout << "Enter r2, x2, y2: ";
+    cin >> r2 >> x2 >> y2;
+
     double pi = 2 * acos(0.0);
+
+    double d = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 
     if (d >= (r1 + r2)) {
         s1 = pi * pow(r1, 2);
