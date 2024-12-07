@@ -1,18 +1,26 @@
-void bubble(int *mas, int n)
+#include "func.hpp"
+
+void swap(int *a, int *b)
 {
-    int tmp = 0, i, j;
-    int r = 0;
-    for (i = 0; i < n; i++)
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void bubbleSort(int arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
     {
-        for (j = n - 1; j > r; j++)
+        bool swapped = false;
+        for (int j = 0; j < n - 1; j++)
         {
-            if (mas[j] < mas[j - 1])
+            if (arr[j] > arr[j + 1])
             {
-                tmp = mas[j];
-                mas[j] = mas[j - 1];
-                mas[j - 1] = tmp;
+                swap(&arr[j], &arr[j + 1]);
+                swapped = true;
             }
         }
-        r++;
+        if (!swapped)
+            break;
     }
 }
