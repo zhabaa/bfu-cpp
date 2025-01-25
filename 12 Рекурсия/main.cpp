@@ -88,5 +88,6 @@ int second() {
 }
 
 int main() {
+    first();
     second();
 }
