@@ -2,12 +2,11 @@
 #include "func.hpp"
 
 namespace ddl {
-    // void make(Node *&sent) { // переписать
-    //     Node* sent = new Node;
-    //     sent -> next = sent;
-    //     sent -> prev = sent;
-        
-    // };
+    void make(Node *&sent) {
+        sent = new Node;
+        sent -> next = sent;
+        sent -> prev = sent;
+    };
 
     void push_back(Node* sent, int value) {
         Node* curr = new Node;
@@ -98,16 +97,19 @@ namespace ddl {
     void bSort(Node* sent) {
         Node* curr = sent -> next;
         Node* next;
-
         int temp;
 
-        while (curr -> next != sent) {
+        while (curr != sent) {
             next = curr -> next;
 
-            if (curr -> data < next -> data) {
-                temp = curr -> data;
-                curr -> data = next -> data;
-                next -> data = temp;
+            while (next != sent) {
+                if (curr -> data < next -> data) {
+                    temp = curr -> data;
+                    curr -> data = next -> data;
+                    next -> data = temp;
+                }
+
+                next = next -> next;
             }
 
             curr = curr -> next;

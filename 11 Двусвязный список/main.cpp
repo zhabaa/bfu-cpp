@@ -18,9 +18,8 @@ bool hasPrime(Node *sent) {
 }
 
 int main() {
-    Node* sent = new Node;
-    sent -> next = sent;
-    sent -> prev = sent;
+    Node* sent;
+    make(sent);
 
     int n;
 
@@ -47,6 +46,7 @@ int main() {
 
     std::cout << "Result list: ";
     print(sent);
+
     clear(sent);
 
     return 0;

@@ -5,7 +5,7 @@ namespace ddl {
         Node* next;
     };
 
-    // void make(Node);
+    void make(Node *&sent);
     void push_back(Node*, int);
     void push_front(Node*, int);
     void print(Node*);
