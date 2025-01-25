@@ -7,6 +7,7 @@ void printReverse(int n) {
         std::cout << n;
         return;
     }
+
     std::cout << n % 10;
     printReverse(n / 10);
 }
@@ -49,41 +50,43 @@ void printArray(const std::vector<int>& arr) {
 }
 
 int first() {
-    int N;
-    std::cout << "Введите натуральное число: ";
-    std::cin >> N;
-    
-    if (N > 0) {
-        printReverse(N);
-        std::cout << std::endl;
-    } else {
-        std::cout << "Введите корректное натуральное число." << std::endl;
-    }
+    int n;
+    std::cout << "Enter number: ";
+    std::cin >> n;
+
+    printReverse(n);
+    std::cout << std::endl;
 
     return 0;
 }
 
 int second() {
-    std::vector<int> arr = {64, 34, 25, 12, 22, 11, 90};
+    std::vector<int> arr;
+
+    for (int i = 0; i < 10'000; ++i) {
+        arr.push_back(rand() % 1000000 - 1);
+    }
+
     std::vector<int> arrCopy = arr;
 
-    std::cout << "Исходный массив: ";
-    printArray(arr);
+    // std::cout << "Vector: ";
+    // printArray(arr);
 
     clock_t start = clock();
     quickSort(arr, 0, arr.size() - 1);
     clock_t end = clock();
-    std::cout << "Отсортированный массив (быстрая сортировка): ";
-    printArray(arr);
-    std::cout << "Время быстрой сортировки: " << double(end - start) / CLOCKS_PER_SEC << " секунд." << std::endl;
+
+    std::cout << "Qsort result: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
 
     start = clock();
     bubbleSort(arrCopy);
     end = clock();
-    std::cout << "Отсортированный массив (сортировка обменами): ";
-    printArray(arrCopy);
-    std::cout << "Время сортировки обменами: " << double(end - start) / CLOCKS_PER_SEC << " секунд." << std::endl;
+
+    std::cout << "swapSort result: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
 
     return 0;
 }
 
+int main() {
+    second();
+}
