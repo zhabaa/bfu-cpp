@@ -63,7 +63,7 @@ int first() {
 int second() {
     std::vector<int> arr;
 
-    for (int i = 0; i < 10'000; ++i) {
+    for (int i = 0; i < 10'000'000; ++i) {
         arr.push_back(rand() % 1000000 - 1);
     }
 
@@ -88,6 +88,6 @@ int second() {
 }
 
 int main() {
-    first();
+    // first();
     second();
 }
