@@ -22,7 +22,7 @@ class Cube {
         }
 
         int getArea() {
-            return std::pow(side, 2);
+            return std::pow(side, 2)*6;
         }
 
         int getVolume() {
