@@ -98,7 +98,7 @@ public:
         return result;
     }
 
-    Matrix& operator*=(const Matrix& other) {
+    Matrix<T, N, M>& operator*=(const Matrix<T, M, M>& other) {
         *this = *this * other;
         return *this;
     }
@@ -137,3 +137,7 @@ public:
         }
     }
 };
+
+
+
+//NxM = NxM * MxM

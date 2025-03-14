@@ -19,7 +19,10 @@ int main() {
     std::cout << "Matrix 2:" << std::endl << mat2;
 
     sum = mat1 + mat2;
+
     prod = mat1 * mat2;
+
+    mat1*=mat2;
 
     std::cout << "Sum:" << std::endl << sum;
     std::cout << "Product:" << std::endl << prod;

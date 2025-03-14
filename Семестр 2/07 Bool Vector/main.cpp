@@ -1,98 +1,110 @@
 #include <iostream>
 #include <vector>
-#include <cstdint>
+#include <algorithm>
 
-template<typename T>
 class BitVector {
 private:
-    std::vector<T> data;
-    size_t size_;
+    std::vector<unsigned char> data;
+    size_t size_in_bits;
+
+    size_t get_byte_index(size_t bit_index) const {
+        return bit_index / 8;
+    }
+
+    size_t get_bit_offset(size_t bit_index) const {
+        return bit_index % 8;
+    }
 
 public:
-    BitVector() : size_(0) {}
+    BitVector(size_t size) : size_in_bits(size) {
+        data.resize((size + 7) / 8, 0); // Round up to the nearest byte
+    }
 
     void push_back(bool value) {
-        if (!(size_ % (sizeof(T) * 8))) {
-            data.push_back(0);
-        }
+        size_in_bits++;
+        data.resize((size_in_bits + 7) / 8, 0); // Resize if needed
 
-        size_t index = size_ / (sizeof(T) * 8);
-        size_t bit = size_ % (sizeof(T) * 8);
+        size_t byte_index = get_byte_index(size_in_bits - 1);
+        size_t bit_offset = get_bit_offset(size_in_bits - 1);
 
         if (value) {
-            data[index] |= (1 << bit);
-        } else {
-            data[index] &= ~(1 << bit);
+            data[byte_index] |= (1 << bit_offset);
         }
-        size_++;
     }
 
     bool operator[](size_t index) const {
-        size_t block = index / (sizeof(T) * 8);
-        size_t bit = index % (sizeof(T) * 8);
-        return (data[block] >> bit) & 1;
+        size_t byte_index = get_byte_index(index);
+        size_t bit_offset = get_bit_offset(index);
+        return (data[byte_index] >> bit_offset) & 1;
     }
 
-    void set(size_t index, bool value) {
-        size_t block = index / (sizeof(T) * 8);
-        size_t bit = index % (sizeof(T) * 8);
-        if (value) {
-            data[block] |= (1 << bit);
-        } else {
-            data[block] &= ~(1 << bit);
-        }
+    bool& operator[](size_t index) {
+        size_t byte_index = get_byte_index(index);
+        size_t bit_offset = get_bit_offset(index);
+        return ((data[byte_index] >> bit_offset) & 1) ? get_ref(byte_index, bit_offset, true): get_ref(byte_index, bit_offset, false);
     }
+    bool& get_ref(size_t byte_index, size_t bit_offset, bool value){
+        if (value){
+            data[byte_index] |= (1 << bit_offset);
+        } else {
+            data[byte_index] &= ~(1 << bit_offset);
+        }
+        return ((data[byte_index] >> bit_offset) & 1) ? get_ref(byte_index, bit_offset, true): get_ref(byte_index, bit_offset, false);
+
+    }
+
 
     size_t size() const {
-        return size_;
+        return size_in_bits;
     }
 
     void insert(size_t index, bool value) {
-        if (index >= size_) {
-            push_back(value);
-            return;
+        size_in_bits++;
+        data.resize((size_in_bits + 7) / 8, 0);
+
+        //Shift bits to the right
+        for (size_t i = size_in_bits - 1; i > index; --i) {
+            (*this)[i] = (*this)[i - 1];
         }
-        push_back(false);
-        for (size_t i = size_ - 1; i > index; --i) {
-            set(i, (*this)[i - 1]);
-        }
-        set(index, value);
+        (*this)[index] = value;
+
     }
 
     void erase(size_t index) {
-        for (size_t i = index; i < size_ - 1; ++i) {
-            set(i, (*this)[i + 1]);
+        //Shift bits to the left
+        for (size_t i = index; i < size_in_bits - 1; ++i) {
+            (*this)[i] = (*this)[i + 1];
         }
-        size_--;
+        size_in_bits--;
+        data.resize((size_in_bits + 7) / 8, 0);
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const BitVector& bv) {
+        for (size_t i = 0; i < bv.size(); ++i) {
+            os << bv[i] << " ";
+        }
+        return os;
     }
 };
 
 int main() {
-    BitVector<uint64_t> bv;
+    BitVector bv(5);
+
     bv.push_back(true);
     bv.push_back(false);
     bv.push_back(true);
+    bv.push_back(true);
+    bv.push_back(false);
+
+    bv.insert(2, false);
+    bv[0] = false;
 
     std::cout << "Size: " << bv.size() << std::endl;
-    std::cout << "Values: ";
-    for (size_t i = 0; i < bv.size(); ++i) {
-        std::cout << bv[i] << " ";
-    }
-    std::cout << std::endl;
-
-    bv.insert(1, false);
-    std::cout << "After insert: ";
-    for (size_t i = 0; i < bv.size(); ++i) {
-        std::cout << bv[i] << " ";
-    }
-    std::cout << std::endl;
-
-    bv.erase(1);
-    std::cout << "After erase: ";
-    for (size_t i = 0; i < bv.size(); ++i) {
-        std::cout << bv[i] << " ";
-    }
-    std::cout << std::endl;
+    std::cout << "elements: " << bv << std::endl;
+    std::cout << "sizeof: " << sizeof(bv) << std::endl;
+    
+    bv.erase(3);
+    std::cout << "elements after eraise: " << bv << std::endl;
 
     return 0;
 }

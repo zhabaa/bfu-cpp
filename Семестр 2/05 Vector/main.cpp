@@ -122,13 +122,16 @@ public:
     }
 
     T& operator[](size_t index) {
-        if (index >= size_) {
-            throw std::out_of_range("Index out of range");
-        }
+
         return data[index];
     }
 
     const T& operator[](size_t index) const {
+        return data[index];
+    }
+    
+
+    const T at(size_t index) const {
         if (index >= size_) {
             throw std::out_of_range("Index out of range");
         }
@@ -139,7 +142,7 @@ public:
 int main() {
     MyVector<long> vec;
     
-    for (int i = 0; i < 1'000'000; ++i) {
+    for (int i = 0; i < 8000; ++i) {
         vec.push_back(i);
     }
 

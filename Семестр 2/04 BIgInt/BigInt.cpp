@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-// #include <algorithm>
-// #include <cctype>
 
 class BigInt {
 private:
@@ -164,10 +162,7 @@ public:
             number += num[i];
         }
 
-        // std::cout << "[ctor] before " << num << std::endl;
         normalize();
-
-        // std::cout << "[ctor] after " << num << std::endl;
     }
 
     BigInt(const BigInt& other) : number(other.number), is_negative(other.is_negative) {}
@@ -183,6 +178,7 @@ public:
 
     BigInt operator+(const BigInt& other) const {
         BigInt result;
+
         if (is_negative == other.is_negative) {
             result.is_negative = is_negative;
             result.number = add_number(number, other.number);
@@ -197,12 +193,7 @@ public:
                 result.number = subtract_number(other.number, number);
             }
         }
-        // std::cout << result << "before op+" << std::endl;
-
         result.normalize();
-
-        // std::cout << result << "after op+" << std::endl;
-
         return result;
     }
 
@@ -216,10 +207,7 @@ public:
 
         result.number = multiply_number(number, other.number);
         result.is_negative = is_negative != other.is_negative;
-        // std::cout << result << "before op*" << std::endl;
         result.normalize();
-
-        // std::cout << result << "after op*" << std::endl;
 
         return result;
     }
@@ -259,33 +247,11 @@ public:
         return !(*this == other);
     }
 
-    // friend std::ostream& operator<<(std::ostream& os, const BigInt& num) {
-    //     if (num.is_negative) {
-    //         os << '-';
-    //     }
-
-    //     for (int i = 0; i < num.number.size(); ++i) {
-    //         os << num.number[i];
-    //     }
-
-    //     return os;
-    // }
-
-    // friend std::istream& operator>>(std::istream& is, BigInt& num) {
-    //     std::string input;
-    //     is >> input;
-    //     num = BigInt(input);
-
-    //     return is;
-    // }
     friend std::ostream& operator<<(std::ostream& os, const BigInt& num) {
-
-        // std::cout << num.number << "op<<" << std::endl;
-        // std::cout << num << "op<<" << std::endl;
-
         if (num.is_negative) {
             os << '-';
         }
+
         for (int i = num.number.size() - 1; i >= 0; --i) {
             os << num.number[i];
         }
@@ -295,7 +261,6 @@ public:
     friend std::istream& operator>>(std::istream& is, BigInt& num) {
         std::string input;
         is >> input;
-        // std::cout << input << std::endl;
         num = BigInt(input);
         return is;
     }
