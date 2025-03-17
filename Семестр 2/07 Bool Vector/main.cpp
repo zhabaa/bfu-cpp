@@ -17,12 +17,12 @@ private:
 
 public:
     BitVector(size_t size) : size_in_bits(size) {
-        data.resize((size + 7) / 8, 0); // Round up to the nearest byte
+        data.resize((size + 7) / 8, 0);
     }
 
     void push_back(bool value) {
         size_in_bits++;
-        data.resize((size_in_bits + 7) / 8, 0); // Resize if needed
+        data.resize((size_in_bits + 7) / 8, 0);
 
         size_t byte_index = get_byte_index(size_in_bits - 1);
         size_t bit_offset = get_bit_offset(size_in_bits - 1);
@@ -43,6 +43,7 @@ public:
         size_t bit_offset = get_bit_offset(index);
         return ((data[byte_index] >> bit_offset) & 1) ? get_ref(byte_index, bit_offset, true): get_ref(byte_index, bit_offset, false);
     }
+
     bool& get_ref(size_t byte_index, size_t bit_offset, bool value){
         if (value){
             data[byte_index] |= (1 << bit_offset);
@@ -62,7 +63,6 @@ public:
         size_in_bits++;
         data.resize((size_in_bits + 7) / 8, 0);
 
-        //Shift bits to the right
         for (size_t i = size_in_bits - 1; i > index; --i) {
             (*this)[i] = (*this)[i - 1];
         }
@@ -71,7 +71,6 @@ public:
     }
 
     void erase(size_t index) {
-        //Shift bits to the left
         for (size_t i = index; i < size_in_bits - 1; ++i) {
             (*this)[i] = (*this)[i + 1];
         }

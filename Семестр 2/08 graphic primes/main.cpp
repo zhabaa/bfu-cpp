@@ -23,12 +23,10 @@ int main()
     triangle.setPosition(600.f, 400.f);
     triangle.setRotation(90.f);
 
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         sf::Event event;
 
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
