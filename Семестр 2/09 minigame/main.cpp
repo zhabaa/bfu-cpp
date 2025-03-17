@@ -22,40 +22,37 @@ struct Bullet {
     sf::CircleShape shape;
     sf::Vector2f velocity;
 
-    Bullet(const sf::Color color) {
+    Bullet() {
         shape.setRadius(5);
         shape.setFillColor(sf::Color::White); // тут цвет
     }
 
     bool atScreen() {
-        if (checkCoords(shape.getPosition())) { // проверка на вылет
-            return false;
-        }
+        if (checkCoords(shape.getPosition())) return false;
         return true;
     }
 
     void update() {
         shape.move(velocity);
-
     }
 };
 
 struct Tank {
     sf::RectangleShape body;
     sf::Color color;
+    
     bool isAlive;
     float speed;
     float rotation;
-    
-    std::vector<Bullet> bullets;
     const float rotationSpeed = 0.05f;
-
+    
+    Bullet bullet;
+    
     Tank(sf::Vector2f size, sf::Color color, sf::Vector2f position, float default_rotation) {
         body.setSize(size);
         body.setFillColor(color);
         body.setPosition(position);
         body.setOrigin(size.x / 2, size.y / 2);
-
         speed = .05f;
         rotation = default_rotation;
         isAlive = true;
@@ -77,19 +74,20 @@ struct Tank {
     void shoot() {
         if (!isAlive) return;
 
-        Bullet bullet(this -> color); // пока не роляет
         bullet.shape.setPosition(body.getPosition());
 
         bullet.velocity = sf::Vector2f(
             std::cos(rotation * PI / 180.0f) * 1.0f,
             std::sin(rotation * PI / 180.0f) * 1.0f
         );
-
-        if (bullets.size() < 3) {
-            bullets.push_back(bullet); // количество пупуль
-            std::cout << "Bullet added! Total bullets: " << bullets.size() << std::endl; // Отладочный вывод
-        }
     }
+
+    // void update() {
+        // bullet.update();
+        // if (!bullet.atScreen()) {
+        //     bullet = Bullet();
+        // }
+    // }
 };
 
 
@@ -98,8 +96,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tank PvP");
 
     Tank tank1(sf::Vector2f(50, 30), sf::Color::Red, sf::Vector2f(100, 300), .0f);
-    // Tank tank2(sf::Vector2f(50, 30), sf::Color::Blue, sf::Vector2f(WINDOW_WIDTH - 100, 300), 180.f);
-
+    Tank tank2(sf::Vector2f(50, 30), sf::Color::Cyan, sf::Vector2f(WINDOW_WIDTH - 100, 300), 180.f);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -114,56 +111,36 @@ int main()
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) tank1.rotate(true);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) tank1.rotate(false);
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) tank1.shoot();
+        }        
+        if (tank2.isAlive) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) tank2.move(true);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) tank2.move(false);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) tank2.rotate(true);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) tank2.rotate(false);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) tank2.shoot();
         }
 
-        // if (tank2.isAlive) {
-        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) tank2.move(true);
-        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) tank2.move(false);
-        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) tank2.rotate(true);
-        //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) tank2.rotate(false);
-        //     // if (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) bullet2.reload();
-
-        //     // if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) && !bullet2.isActive) { // && !bullet2.isActive
-        //     //     bullet2.shape.setPosition(tank2.body.getPosition());
-        //     //     bullet2.velocity = sf::Vector2f(
-        //     //         std::cos(tank2.rotation * PI / 180.0f) * 1.0f,
-        //     //         std::sin(tank2.rotation * PI / 180.0f) * 1.0f
-        //     //     );
-        //     //     bullet2.isActive = true;
-        //     // }
-        // }
-
-
-        for (auto it = tank1.bullets.begin(); it != tank1.bullets.end(); ) {
-            it->update(); // Обновляем позицию пули
-            if (!(it->atScreen())) {
-                it = tank1.bullets.erase(it); // Удаляем пулю и получаем новый итератор
-                std::cout << "Bullets deleted!" << std::endl;
-            } else {
-                ++it; // Переходим к следующей пуле
-            }
+        if (checkCollision(tank1.bullet.shape.getGlobalBounds(), tank2.body.getGlobalBounds())) {
+            std::cout << "RED TANK WIN" << std::endl;
+            window.close();
+        }        
+        if (checkCollision(tank2.bullet.shape.getGlobalBounds(), tank1.body.getGlobalBounds())) {
+            std::cout << "CYAN TANK WIN" << std::endl;
+            window.close();
         }
 
-        std::cout << "Bullets count: " << tank1.bullets.size() << std::endl;
-        for (const auto& bullet : tank1.bullets) {
-            sf::Vector2f pos = bullet.shape.getPosition();
-            std::cout << "Bullet position: (" << pos.x << ", " << pos.y << ")\n";
-        }
-
-        // if (bullet1.isActive && checkCollision(bullet1.shape.getGlobalBounds(), tank2.body.getGlobalBounds())) {
-        //     std::cout << "RED TANK WIN" << std::endl;
-        //     window.close();
-        // }
-
-        
         window.clear();
+    
+        tank1.bullet.update();
+        tank2.bullet.update();
+        // tank1.update();
+        // tank1.update();
 
-        if (tank1.isAlive) window.draw(tank1.body); // рисуем танк
-        // if (tank2.isAlive) window.draw(tank2.body);
+        if (tank1.isAlive) window.draw(tank1.body); 
+        if (tank2.isAlive) window.draw(tank2.body);
 
-        for (const Bullet& bullet : tank1.bullets) {
-            window.draw(bullet.shape); // рисуем пули
-        }
+        window.draw(tank1.bullet.shape);
+        window.draw(tank2.bullet.shape);
 
         window.display();
     }
