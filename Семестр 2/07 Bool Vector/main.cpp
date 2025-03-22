@@ -1,109 +1,114 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
-class BitVector {
+class BoolVector
+{
 private:
     std::vector<unsigned char> data;
-    size_t size_in_bits;
-
-    size_t get_byte_index(size_t bit_index) const {
-        return bit_index / 8;
-    }
-
-    size_t get_bit_offset(size_t bit_index) const {
-        return bit_index % 8;
-    }
+    size_t length;
 
 public:
-    BitVector(size_t size) : size_in_bits(size) {
-        data.resize((size + 7) / 8, 0);
-    }
+    BoolVector() : length(0) {}
 
     void push_back(bool value) {
-        size_in_bits++;
-        data.resize((size_in_bits + 7) / 8, 0);
-
-        size_t byte_index = get_byte_index(size_in_bits - 1);
-        size_t bit_offset = get_bit_offset(size_in_bits - 1);
-
-        if (value) {
-            data[byte_index] |= (1 << bit_offset);
+        if (length % 8 == 0) {
+            data.push_back(0);
         }
+        data[length / 8] |= (value << (length % 8));
+        length++;
+    }
+
+    bool get(size_t index) const {
+        if (index >= length)
+            throw std::out_of_range("Index is out of range");
+        return (data[index / 8] >> (index % 8)) & 1;
     }
 
     bool operator[](size_t index) const {
-        size_t byte_index = get_byte_index(index);
-        size_t bit_offset = get_bit_offset(index);
-        return (data[byte_index] >> bit_offset) & 1;
+        if (index >= length) 
+            throw std::out_of_range("Index out of range");
+        return get(index);
     }
 
-    bool& operator[](size_t index) {
-        size_t byte_index = get_byte_index(index);
-        size_t bit_offset = get_bit_offset(index);
-        return ((data[byte_index] >> bit_offset) & 1) ? get_ref(byte_index, bit_offset, true): get_ref(byte_index, bit_offset, false);
+    void set(size_t index, bool value) {
+        if (index >= length)
+            throw std::out_of_range("Index is out of range");
+        if (value)
+            data[index / 8] |= (1 << (index % 8));
+        else
+            data[index / 8] &= ~(1 << (index % 8));
     }
-
-    bool& get_ref(size_t byte_index, size_t bit_offset, bool value){
-        if (value){
-            data[byte_index] |= (1 << bit_offset);
-        } else {
-            data[byte_index] &= ~(1 << bit_offset);
-        }
-        return ((data[byte_index] >> bit_offset) & 1) ? get_ref(byte_index, bit_offset, true): get_ref(byte_index, bit_offset, false);
-
-    }
-
 
     size_t size() const {
-        return size_in_bits;
+        return length;
     }
 
     void insert(size_t index, bool value) {
-        size_in_bits++;
-        data.resize((size_in_bits + 7) / 8, 0);
-
-        for (size_t i = size_in_bits - 1; i > index; --i) {
-            (*this)[i] = (*this)[i - 1];
+        if (index >= length) {
+            throw std::out_of_range("Index is out of range");
         }
-        (*this)[index] = value;
 
+        if (index == length) {
+            push_back(value);
+            return;
+        }
+
+        push_back(false);
+
+        for (size_t i = length - 1; i > index; --i) {
+            set(i, get(i - 1));
+        }
+
+        set(index, value);
     }
 
     void erase(size_t index) {
-        for (size_t i = index; i < size_in_bits - 1; ++i) {
-            (*this)[i] = (*this)[i + 1];
+        if (index >= length) {
+            throw std::out_of_range("Index is out of range");
         }
-        size_in_bits--;
-        data.resize((size_in_bits + 7) / 8, 0);
+
+        for (size_t i = index; i < length - 1; ++i) {
+            set(i, get(i + 1));
+        }
+
+        length--;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const BitVector& bv) {
-        for (size_t i = 0; i < bv.size(); ++i) {
-            os << bv[i] << " ";
+    friend std::ostream& operator<<(std::ostream& os, const BoolVector& bv) {
+        for (size_t i = 0; i < bv.length; ++i) {
+            os << bv.get(i) << " ";
         }
+        os << std::endl;
         return os;
     }
 };
 
-int main() {
-    BitVector bv(5);
+int main()
+{
+    BoolVector bv;
 
     bv.push_back(true);
     bv.push_back(false);
     bv.push_back(true);
-    bv.push_back(true);
     bv.push_back(false);
 
-    bv.insert(2, false);
-    bv[0] = false;
-
-    std::cout << "Size: " << bv.size() << std::endl;
-    std::cout << "elements: " << bv << std::endl;
-    std::cout << "sizeof: " << sizeof(bv) << std::endl;
+    std::cout << "Initial vector: ";
+    std::cout << bv;
     
-    bv.erase(3);
-    std::cout << "elements after eraise: " << bv << std::endl;
+    bv.insert(2, true);
+    std::cout << "After inserting true at index 2: ";
+    std::cout << bv;
+    
+    bv.erase(1);
+    std::cout << "After erasing index 1: ";
+    std::cout << bv;
+    
+    bv.set(0, false);
+    std::cout << "After setting index 0 to false: ";
+    std::cout << bv;
+
+    std::cout << "Size of vector: " << bv.size() << std::endl;
+    std::cout << bv[0];
 
     return 0;
 }

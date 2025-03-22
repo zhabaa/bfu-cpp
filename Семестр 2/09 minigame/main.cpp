@@ -89,10 +89,10 @@ struct Tank {
     }
 
     // void update() {
-        // bullet.update();
-        // if (!bullet.atScreen()) {
-        //     bullet = Bullet();
-        // }
+    //     bullet.update();
+    //     if (!bullet.atScreen()) {
+    //         bullet = Bullet();
+    //     }
     // }
 };
 
